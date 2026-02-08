@@ -1,0 +1,22 @@
+======================================================================
+          RUN-LENGTH ENCODING COMPRESSION RESULTS
+======================================================================
+
+Encoding: 6-bit run values, 1D row-by-row, rows assumed to start with 1
+
+----------------------------------------------------------------------
+File                           Uncomp Bits     Comp Bits       Ratio     
+----------------------------------------------------------------------
+bit_plane_0.png                65536           36756           0.5609
+bit_plane_1.png                65536           198504          3.0289
+bit_plane_2.png                65536           195798          2.9876
+bit_plane_3.png                65536           175266          2.6743
+bit_plane_4.png                65536           139836          2.1337
+bit_plane_5.png                65536           91266           1.3926
+bit_plane_6.png                65536           64254           0.9804
+bit_plane_7.png                65536           36756           0.5609
+----------------------------------------------------------------------
+
+Average Compression Ratio:                    1.7899
+
+Note: Ratio < 1 means compression achieved, Ratio > 1 means expansion.
