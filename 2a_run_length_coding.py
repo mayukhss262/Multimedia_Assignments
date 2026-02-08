@@ -8,7 +8,6 @@ import os
 import numpy as np
 from PIL import Image
 
-
 def run_length_encode_row(row):
     """
     Performs 1D run-length encoding on a binary row.
