@@ -67,7 +67,7 @@ def run_length_encode_row_with_values(row):
     Performs 1D run-length encoding on a binary row.
     Returns list of tuples: (value, run_length) where value is 0 or 1.
     Rows are assumed to start with 1. If row starts with 0, first run is (1, 0).
-    Each run length is capped at 63 (6-bit max).
+    No cap on run length - runs can be any length.
     """
     binary_row = (row > 0).astype(np.uint8)
     runs = []
@@ -75,13 +75,9 @@ def run_length_encode_row_with_values(row):
     if len(binary_row) == 0:
         return runs
     
-    # Determine starting value (always assume we start expecting 1)
-    expected_val = 1
-    
     if binary_row[0] == 0:
         # Row starts with 0, so there's a zero-length run of 1s first
         runs.append((1, 0))
-        expected_val = 0
     
     current_val = binary_row[0]
     current_run = 0
@@ -89,18 +85,13 @@ def run_length_encode_row_with_values(row):
     for pixel in binary_row:
         if pixel == current_val:
             current_run += 1
-            if current_run > 63:
-                runs.append((current_val, 63))
-                # Need a zero-length run of opposite value
-                runs.append((1 - current_val, 0))
-                current_run = 1
         else:
-            runs.append((current_val, min(current_run, 63)))
+            runs.append((current_val, current_run))
             current_val = pixel
             current_run = 1
     
     if current_run > 0:
-        runs.append((current_val, min(current_run, 63)))
+        runs.append((current_val, current_run))
     
     return runs
 

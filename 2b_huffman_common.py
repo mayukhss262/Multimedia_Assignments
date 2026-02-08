@@ -62,6 +62,7 @@ def run_length_encode_row_with_values(row):
     """
     Performs 1D run-length encoding on a binary row.
     Returns list of tuples: (value, run_length).
+    No cap on run length - runs can be any length.
     """
     binary_row = (row > 0).astype(np.uint8)
     runs = []
@@ -78,17 +79,13 @@ def run_length_encode_row_with_values(row):
     for pixel in binary_row:
         if pixel == current_val:
             current_run += 1
-            if current_run > 63:
-                runs.append((current_val, 63))
-                runs.append((1 - current_val, 0))
-                current_run = 1
         else:
-            runs.append((current_val, min(current_run, 63)))
+            runs.append((current_val, current_run))
             current_val = pixel
             current_run = 1
     
     if current_run > 0:
-        runs.append((current_val, min(current_run, 63)))
+        runs.append((current_val, current_run))
     
     return runs
 
@@ -283,7 +280,7 @@ def process_common_codebook(input_folder, output_file):
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     input_folder = os.path.join(script_dir, 'gray_coded_bit_plane_images')
-    output_file = os.path.join(script_dir, '2c_huffman_common_results.txt')
+    output_file = os.path.join(script_dir, '2b_huffman_common_results.txt')
     
     if not os.path.exists(input_folder):
         print(f"Error: {input_folder} not found!")
