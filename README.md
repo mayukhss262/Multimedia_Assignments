@@ -1,6 +1,10 @@
-# Bit-Plane Image Compression
+# Assignments for Multimedia Systems & Applications (EC60104) [SP 25-26]
 
-This repository contains Python scripts for bit-plane decomposition and lossless compression of grayscale images using Run-Length Encoding (RLE) and Huffman coding.
+Group 1 
+Members : 
+Mayukh Shubhra Saha - 21EC37009
+Adipta Halder - 21EC37023
+Abhradeep De - 21EC37022
 
 ## Contents
 
