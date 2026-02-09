@@ -1,0 +1,30 @@
+
+=== LOSSLESS PREDICTIVE CODING ANALYSIS ===
+Image: lena.png
+Dimensions: 225 x 225
+Coefficients: a1=0.25, a2=0.25, a3=0.25, a4=0.25
+
+--- ENTROPY ANALYSIS ---
+Original Image (UPLOADED BY USER) Entropy:  7.4663 bits/pixel
+Error Image Entropy:     4.9676 bits/pixel
+Entropy Reduction:       33.47%
+
+--- COMPRESSION POTENTIAL ---
+Theoretical CR (Shannon): 1.50:1
+Average bits/pixel (FOR ANY MONOCHROME IMAGE (0-255)): 8.00
+Average bits/pixel (error, optimal encoding): 4.97
+
+--- ERROR STATISTICS ---
+Error Range: [-121, 162]
+Error Mean: -0.0225
+Error Std Dev: 12.8817
+Mean Absolute Error (MAE): 6.8273
+Root Mean Square Error (RMSE): 12.8817
+Error Q1: -3.00
+Error Median: 0.00
+Error Q3: 3.00
+Pixels with zero error: 9067 (17.91%)
+
+--- VERIFICATION ---
+Reconstruction Test: PASS
+Max reconstruction error: 0.0
