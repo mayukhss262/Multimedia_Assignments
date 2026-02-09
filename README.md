@@ -1,10 +1,13 @@
 # Assignments for Multimedia Systems & Applications (EC60104) [SP 25-26]
 
-Group 1 
-Members : 
-Mayukh Shubhra Saha - 21EC37009
-Adipta Halder - 21EC37023
-Abhradeep De - 21EC37022
+## Group 1
+
+**Members:**
+
+- Mayukh Shubhra Saha - 21EC37009  
+- Adipta Halder - 21EC37023  
+- Abhradeep De - 21EC37022
+
 
 ## Contents
 
