@@ -7,16 +7,16 @@ Encoding: 6-bit run values, 1D row-by-row, rows assumed to start with 1
 ----------------------------------------------------------------------
 File                           Uncomp Bits     Comp Bits       Ratio     
 ----------------------------------------------------------------------
-gray_bit_plane_0.png           65536           197820          3.0185
-gray_bit_plane_1.png           65536           196050          2.9915
-gray_bit_plane_2.png           65536           174108          2.6567
-gray_bit_plane_3.png           65536           131874          2.0122
-gray_bit_plane_4.png           65536           98610           1.5047
-gray_bit_plane_5.png           65536           53292           0.8132
-gray_bit_plane_6.png           65536           41202           0.6287
-gray_bit_plane_7.png           65536           36756           0.5609
+gray_bit_plane_0.png           50625           144246          2.8493
+gray_bit_plane_1.png           50625           132582          2.6189
+gray_bit_plane_2.png           50625           116736          2.3059
+gray_bit_plane_3.png           50625           93330           1.8436
+gray_bit_plane_4.png           50625           73884           1.4594
+gray_bit_plane_5.png           50625           40428           0.7986
+gray_bit_plane_6.png           50625           30552           0.6035
+gray_bit_plane_7.png           50625           24540           0.4847
 ----------------------------------------------------------------------
 
-Average Compression Ratio:                    1.7733
+Average Compression Ratio:                    1.6205
 
 Note: Ratio < 1 means compression achieved, Ratio > 1 means expansion.
