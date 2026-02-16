@@ -5,6 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Apply DCT on image blocks")
 parser.add_argument("--input", required=True, help="Input image file")
+parser.add_argument("--output", required=True, help="Output DCT coefficient matrix file")
 args = parser.parse_args()
 
 dct_module = importlib.import_module("1a_dct_8x8")
@@ -36,8 +37,8 @@ for i in range(0, H, 8):
         dct_image[i:i+8, j:j+8] = dct_8x8(block)
 
 # Save DCT coefficients
-np.savetxt("dct_coefficients.txt", dct_image, fmt="%24.15e", delimiter="\t")
-print(f"DCT coefficient matrix saved to dct_coefficients.txt")
+np.savetxt(args.output, dct_image, fmt="%24.15e", delimiter="\t")
+print(f"DCT coefficient matrix saved to {args.output}")
 
 print(f"\nInput image: {args.input} ({H}x{W}, monochrome)")
 print(f"Block size: 8x8")

@@ -35,14 +35,28 @@
 
 ```bash
 # Part 1: DCT, IDCT, and verification
-python 1b_dct_image.py --input lena.png
+
+# 1b: --input <image file> --output <DCT coefficient matrix file>
+python 1b_dct_image.py --input lena.png --output dct_coefficients.txt
+
+# 1c/2c: --input <coefficient matrix file> --output <reconstructed PNG> --matrix-output <IDCT pixel matrix file>
 python 1c_2c_idct_image.py --input dct_coefficients.txt --output lena_reconstructed_exact.png --matrix-output idct_reconstructed_pixels.txt
+
+# 1d: --original <original image> --reconstructed <reconstructed image>
 python 1d_verify_reconstruction.py --original lena.png --reconstructed lena_reconstructed_exact.png
 
 # Part 2: Quantization, inverse quantization, reconstruction, and PSNR
+
+# 2a: --input <DCT coefficient matrix> --qmat <quantization matrix> --output <quantized matrix file>
 python 2a_quantization.py --input dct_coefficients.txt --qmat quantization_matrix.txt --output quantized_matrix.txt
-python 2b_inverse_quantization.py --qmat quantization_matrix.txt --input quantized_matrix.txt --output inv_quantized_matrix.txt
+
+# 2b: --input <quantized matrix file> --qmat <quantization matrix> --output <inverse quantized matrix file>
+python 2b_inverse_quantization.py --input quantized_matrix.txt --qmat quantization_matrix.txt --output inv_quantized_matrix.txt
+
+# Reconstruct from dequantized coefficients using 1c/2c
 python 1c_2c_idct_image.py --input inv_quantized_matrix.txt --output lena_reconstructed_quantized.png --matrix-output idct_dequantized_pixels.txt
+
+# 2d: --original <original image> --reconstructed <reconstructed image>
 python 2d_psnr.py --original lena.png --reconstructed lena_reconstructed_quantized.png
 
 # Repeat Part 2 with scaled quantization matrices (_2, _4, _8) by substituting filenames accordingly.
