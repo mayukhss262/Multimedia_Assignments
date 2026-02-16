@@ -30,6 +30,7 @@
 | `2b_huffman_individual_results.txt` | Detailed Huffman coding results with individual codebooks per plane. Complete compression statistics across all bit planes and the complete Huffman codebooks and symbol statistics are included. |
 | `1c_comparisons.txt` | Comparison analysis of binary vs Gray-coded bit planes. |
 | `DOCUMENTATION_Q3.md` | Documentation for predictive coding (Question 3). |
+| `[Multimedia] Group 1 - Assignment 1 Report.pdf` | Final assignment report. |
 
 ### Input
 
