@@ -1,6 +1,8 @@
-# Assignment 2 — DCT/IDCT Image Compression & Quantization
+# Assignment 2 
 
-## Python Scripts
+## Contents
+
+### Python Scripts
 
 | Script | Description |
 |--------|-------------|
@@ -13,7 +15,7 @@
 | `2b_inverse_quantization.py` | Performs inverse quantization by multiplying quantized coefficients with the quantization matrix element-wise. |
 | `2d_psnr.py` | Checks if two images are identical, then computes PSNR of reconstructed image vs original. |
 
-## Data Files
+### Data Files
 
 | File | Description |
 |------|-------------|
@@ -29,7 +31,7 @@
 | `lena_reconstructed_exact.png` | Reconstructed image from exact DCT→IDCT (should match original). |
 | `lena_reconstructed_quantized{,_2,_4,_8}.png` | Reconstructed images after quantization at each scale. |
 
-## How to Run
+### How to Run
 
 ```bash
 # Part 1: DCT, IDCT, and verification
@@ -46,7 +48,7 @@ python 2d_psnr.py --original lena.png --reconstructed lena_reconstructed_quantiz
 # Repeat Part 2 with scaled quantization matrices (_2, _4, _8) by substituting filenames accordingly.
 ```
 
-## Dependencies
+### Dependencies
 
 - **Python** 3.8+
 - **NumPy** — matrix operations
