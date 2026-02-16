@@ -30,6 +30,7 @@
 | `idct_dequantized_pixels{,_2,_4,_8}.txt` | IDCT output from dequantized coefficients at each scale. |
 | `lena_reconstructed_exact.png` | Reconstructed image from exact DCT→IDCT (should match original). |
 | `lena_reconstructed_quantized{,_2,_4,_8}.png` | Reconstructed images after quantization at each scale. |
+| `[Multimedia] Group 1 - Assignment 2 Report.pdf` | Complete assignment report. |
 
 ### How to Run
 
