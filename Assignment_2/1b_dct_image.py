@@ -1,12 +1,17 @@
 import numpy as np
 from PIL import Image
 import importlib
+import argparse
+
+parser = argparse.ArgumentParser(description="Apply DCT on image blocks")
+parser.add_argument("--input", required=True, help="Input image file")
+args = parser.parse_args()
 
 dct_module = importlib.import_module("1a_dct_8x8")
 dct_8x8 = dct_module.dct_8x8
 
 # Load image
-img = Image.open("lena.png")
+img = Image.open(args.input)
 
 # Convert to monochrome if not already
 if img.mode != "L":
@@ -34,6 +39,6 @@ for i in range(0, H, 8):
 np.savetxt("dct_coefficients.txt", dct_image, fmt="%24.15e", delimiter="\t")
 print(f"DCT coefficient matrix saved to dct_coefficients.txt")
 
-print(f"\nInput image: lena.png ({H}x{W}, monochrome)")
+print(f"\nInput image: {args.input} ({H}x{W}, monochrome)")
 print(f"Block size: 8x8")
 print(f"Number of blocks: {(H // 8) * (W // 8)}")
