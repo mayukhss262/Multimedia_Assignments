@@ -11,7 +11,7 @@
 ## Contents 
 
 - Assignment_1 - RL & Huffman Encoding of Bit Plane Images
-- Assignment_2 - DCT & IDCT 
+- Assignment_2 - DCT & Quantization
 
 ## Note 
 
