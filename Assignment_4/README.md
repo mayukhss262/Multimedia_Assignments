@@ -70,4 +70,3 @@ python 2d_psnr.py --original lena.png --reconstructed lena_reconstructed_quantiz
 - **SciPy** — `scipy.fft.dct` / `scipy.fft.idct`
 - **Pillow** — image I/O (`PIL.Image`)
 
-Install: `pip install numpy scipy pillow`

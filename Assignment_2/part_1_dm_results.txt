@@ -1,0 +1,13 @@
+Delta Modulation Assignment Solution
+--------------------------------------
+Parameters used: alpha = 1.0
+
+1. (b) Reconstructed Image Observations:
+   - For zeta = 5 (Small step size): Slope overload is prominently observed. The reconstruction cannot track rapid changes (such as edges) quickly enough, resulting in blurred edges.
+   - For zeta = 10 (Medium step size): An intermediate quality that balances granular noise and slope overload.
+   - For zeta = 20 (Large step size): Granular noise is prominently observed. In smooth regions of the image, the reconstructed signal oscillates around the true value with a large amplitude, giving a grainy appearance.
+
+1. (c) PSNR of reconstructed images:
+   - PSNR for zeta = 5: 17.08 dB
+   - PSNR for zeta = 10: 19.54 dB
+   - PSNR for zeta = 20: 21.48 dB
