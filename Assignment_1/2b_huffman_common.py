@@ -1,15 +1,3 @@
-"""
-Huffman Coding with Common Codebook for All Gray Coded Bit-Planes
-Uses alternating run-length encoding where:
-- Rows are assumed to start with 1
-- If row starts with 0, first symbol is 0 (zero-length run of 1s)
-- Symbols are just run lengths (0, 1, 2, 3, ...) that alternate between 1s and 0s
-
-Examples:
-  11000111 -> [2, 3, 3] (2 ones, 3 zeros, 3 ones)
-  0001101  -> [0, 3, 2, 1, 1] (0 ones, 3 zeros, 2 ones, 1 zero, 1 one)
-"""
-
 import os
 import heapq
 from collections import Counter
@@ -65,15 +53,7 @@ def generate_huffman_codes(root, current_code="", codes=None):
 
 
 def run_length_encode_row(row):
-    """
-    Performs 1D run-length encoding on a binary row.
-    Assumes row starts with 1. If it starts with 0, first symbol is 0.
-    Returns list of integer run lengths (alternating between 1s and 0s).
     
-    Examples:
-      11000111 -> [2, 3, 3] (2 ones, 3 zeros, 3 ones)
-      0001101  -> [0, 3, 2, 1, 1] (0 ones, 3 zeros, 2 ones, 1 zero, 1 one)
-    """
     binary_row = (row > 0).astype(np.uint8)
     runs = []
     
@@ -102,7 +82,7 @@ def run_length_encode_row(row):
 
 
 def run_length_encode_image(image_array):
-    """Performs 1D run-length encoding on entire image."""
+    
     all_runs = []
     for row in image_array:
         row_runs = run_length_encode_row(row)
@@ -121,18 +101,13 @@ def calculate_entropy(freq_dict, total):
 
 
 def process_common_codebook(input_folder, output_file):
-    """
-    Process all gray coded bit plane images with a common Huffman codebook.
-    Statistics are gathered from all 8 bit planes combined.
-    """
-    # Find all gray bit plane images
+    
     image_files = sorted([f for f in os.listdir(input_folder) 
                           if f.endswith('.png') and 'gray_bit_plane' in f])
     
-    # First pass: gather statistics from all images
-    print("Phase 1: Gathering statistics from all bit planes...")
+    
     all_symbols = []
-    image_data = {}  # Store runs per image for later
+    image_data = {} 
     
     for img_file in image_files:
         img_path = os.path.join(input_folder, img_file)
@@ -149,8 +124,7 @@ def process_common_codebook(input_folder, output_file):
         all_symbols.extend(runs)
         print(f"  {img_file}: {len(runs)} symbols")
     
-    # Calculate combined statistics
-    print("\nPhase 2: Building common Huffman codebook...")
+    
     combined_freq = Counter(all_symbols)
     total_symbols = len(all_symbols)
     
@@ -165,8 +139,6 @@ def process_common_codebook(input_folder, output_file):
     print(f"  Unique symbols (run lengths): {len(combined_freq)}")
     print(f"  Combined entropy: {entropy:.4f} bits/symbol")
     
-    # Second pass: apply common codebook to each image
-    print("\nPhase 3: Encoding each bit plane with common codebook...")
     results = []
     
     with open(output_file, 'w') as f:
@@ -182,7 +154,7 @@ def process_common_codebook(input_folder, output_file):
         f.write("  - Example: 11000111 -> [2, 3, 3] (2 ones, 3 zeros, 3 ones)\n")
         f.write("  - Example: 0001101  -> [0, 3, 2, 1, 1]\n\n")
         
-        # Write common codebook first
+        # Write common codebook 
         f.write("-" * 80 + "\n")
         f.write("COMMON HUFFMAN CODEBOOK (shared across all bit planes)\n")
         f.write("-" * 80 + "\n")

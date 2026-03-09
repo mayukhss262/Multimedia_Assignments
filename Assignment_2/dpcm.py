@@ -36,9 +36,6 @@ def get_lloyd_max_table_unit_variance_laplacian(levels):
     elif levels == 4:
         thresholds = [-1.102, 0.0, 1.102]
         reconstruction = [-1.834, -0.395, 0.395, 1.834]
-        # Or using the search found ones: [-1.13, 0, 1.13] and [-1.83, -0.42, 0.42, 1.83]
-        # We will use the standard from literature. 
-        # For M=4 laplacian, t=[-1.102, 0, 1.102] and y=[-1.834, -0.395, 0.395, 1.834]
     elif levels == 8:
         thresholds = [-2.3796, -1.2527, -0.5332, 0.0, 0.5332, 1.2527, 2.3796]
         reconstruction = [-3.0867, -1.6725, -0.8330, -0.2334, 0.2334, 0.8330, 1.6725, 3.0867]
@@ -97,11 +94,8 @@ def main():
     img = Image.open(img_path).convert('L')
     img_array = np.array(img, dtype=np.float32)
     
-    # 2(a) and 2(b): Open-loop prediction and error image
     predicted, error = predict_open_loop(img_array)
     
-    # Save error image (scaled for visibility)
-    # Scale error from [-255, 255] to [0, 255]
     error_display = np.clip((error + 255) / 2, 0, 255).astype(np.uint8)
     Image.fromarray(error_display).save('dpcm_error_image.png')
     
@@ -114,11 +108,11 @@ def main():
     plt.savefig('dpcm_error_histogram.png')
     plt.close()
     
-    # 2(c): Error variance
+    # Error variance
     variance = np.var(error)
     std_dev = np.sqrt(variance)
     
-    # 2(d) & 2(e): DPCM and PSNR
+    # DPCM and PSNR
     results_text = []
     results_text.append(f"Error Variance: {variance:.2f}")
     results_text.append(f"Error Std Dev: {std_dev:.2f}\n")

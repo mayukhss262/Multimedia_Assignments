@@ -12,6 +12,7 @@
 
 - Assignment_1 - RL & Huffman Encoding of Bit Plane Images
 - Assignment_2 - Delta Modulation & DPCM 
+- Assignment_3 - K-L Transformations
 - Assignment_4 - DCT & Quantization
 
 ## Note 

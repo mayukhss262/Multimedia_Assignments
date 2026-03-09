@@ -1,16 +1,3 @@
-"""
-Huffman Coding for Run-Length Encoded Gray Coded Bit-Plane Images
-Each bit plane uses its own Huffman codebook based on individual statistics.
-Uses alternating run-length encoding where:
-- Rows are assumed to start with 1
-- If row starts with 0, first symbol is 0 (zero-length run of 1s)
-- Symbols are just run lengths (0, 1, 2, 3, ...) that alternate between 1s and 0s
-
-Examples:
-  11000111 -> [2, 3, 3] (2 ones, 3 zeros, 3 ones)
-  0001101  -> [0, 3, 2, 1, 1] (0 ones, 3 zeros, 2 ones, 1 zero, 1 one)
-"""
-
 import os
 import heapq
 from collections import Counter
@@ -66,15 +53,7 @@ def generate_huffman_codes(root, current_code="", codes=None):
 
 
 def run_length_encode_row(row):
-    """
-    Performs 1D run-length encoding on a binary row.
-    Assumes row starts with 1. If it starts with 0, first symbol is 0.
-    Returns list of integer run lengths (alternating between 1s and 0s).
     
-    Examples:
-      11000111 -> [2, 3, 3] (2 ones, 3 zeros, 3 ones)
-      0001101  -> [0, 3, 2, 1, 1] (0 ones, 3 zeros, 2 ones, 1 zero, 1 one)
-    """
     binary_row = (row > 0).astype(np.uint8)
     runs = []
     
@@ -96,7 +75,6 @@ def run_length_encode_row(row):
             current_val = pixel
             current_run = 1
     
-    # Append the last run
     runs.append(current_run)
     
     return runs
@@ -122,11 +100,7 @@ def calculate_entropy(freq_dict, total):
 
 
 def process_individual_codebooks(input_folder, output_file):
-    """
-    Process gray coded bit plane images with individual Huffman codebooks.
-    Each bit plane uses its own statistics and codebook.
-    """
-    # Find all gray bit plane images
+    
     image_files = sorted([f for f in os.listdir(input_folder) 
                           if f.endswith('.png') and 'gray_bit_plane' in f])
     
@@ -149,12 +123,10 @@ def process_individual_codebooks(input_folder, output_file):
         for img_file in image_files:
             img_path = os.path.join(input_folder, img_file)
             
-            # Load image
             img = Image.open(img_path).convert('L')
             pixels = np.array(img)
             height, width = pixels.shape
             
-            # Uncompressed size (1 bit per pixel)
             uncompressed_bits = height * width
             
             # Get run lengths
@@ -193,7 +165,6 @@ def process_individual_codebooks(input_folder, output_file):
             }
             results.append(result)
             
-            # Write detailed results for this bit plane
             f.write("-" * 80 + "\n")
             f.write(f"Bit Plane: {img_file}\n")
             f.write("-" * 80 + "\n")

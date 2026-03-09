@@ -1,12 +1,3 @@
-"""
-Lossless Predictive Coding for Image Compression using 4-neighbor linear prediction.
-The predictor uses weighted sum of neighboring pixels (top-left diagonal, top, top-right
-diagonal, and left) to estimate current pixel value, and the error (residual) image has significantly lower entropy than the original.
-
-ŝ(n₁, n₂) = a₁·s(n₁-1,n₂-1) + a₂·s(n₁-1,n₂) + a₃·s(n₁-1,n₂+1) + a₄·s(n₁,n₂-1) where coefficients a₁ = a₂ = a₃ = a₄ = 0.25 (sum to 1)
-
-"""
-
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -18,31 +9,15 @@ import warnings
 
 
 class LosslessPredictiveCoder:
-    """
-    Attributes:
-        coefficients (tuple): Prediction coefficients (a₁, a₂, a₃, a₄)
-        original_image (np.ndarray): Input grayscale image
-        predicted_image (np.ndarray): Computed prediction
-        error_image (np.ndarray): Prediction error (signed integers)
-        image_path (str): Path to the loaded image"""
     
     def __init__(self, image_input: Union[str, np.ndarray], coefficients: Tuple[float, float, float, float] = (0.25, 0.25, 0.25, 0.25)) -> None:
         
-        """Initialize the coder with an image and prediction coefficients.
-        Args:
-            image_input: Either path to grayscale image file or numpy array 
-            coefficients: Tuple of 4 prediction coefficients (a₁, a₂, a₃, a₄)       
-        Raises:
-            ValueError: If coefficients don't sum to 1 or image is not grayscale
-            FileNotFoundError: If image file doesn't exist
-        """
-        # Validate coefficients - they should sum to 1 for proper prediction
         if abs(sum(coefficients) - 1.0) > 1e-6:
             raise ValueError(f"Coefficients must sum to 1.0, got {sum(coefficients)}")
         
         self.coefficients = coefficients
         
-        # Load image from file or use provided array
+        # Load image from file 
         if isinstance(image_input, str):
             self.image_path = image_input
             if not os.path.exists(image_input):
@@ -73,19 +48,7 @@ class LosslessPredictiveCoder:
         self.height, self.width = self.original_image.shape
     
     def compute_predicted_image(self) -> np.ndarray:
-        """
-        For each pixel at position (n₁, n₂), compute prediction using 4 causal neighbors:
-            ŝ(n₁, n₂) = a₁·s(n₁-1,n₂-1) + a₂·s(n₁-1,n₂) + a₃·s(n₁-1,n₂+1) + a₄·s(n₁,n₂-1)
         
-        Boundary Handling:
-        - Pixel (0,0): ŝ = 0
-        - First row (n₁=0): Use left neighbor
-        - First column (n₂=0): Use top neighbor
-        - Last column (n₂=W-1): Use top-left, top, left (redistribute a3)
-        
-        Returns:
-            np.ndarray: Predicted image as integers
-        """
         a1, a2, a3, a4 = self.coefficients
         H, W = self.height, self.width
         s = self.original_image
@@ -138,38 +101,20 @@ class LosslessPredictiveCoder:
         return self.predicted_image
     
     def compute_error_image(self) -> np.ndarray:
-        
-        """Compute error (residual) image: e = original - predicted.
-        For natural images with strong spatial correlation, most errors cluster around zero,
-        resulting in a lower entropy distribution.
-        
-        Returns:
-            np.ndarray: Error image (signed integers, range [-255, +255] for 8-bit)
-        """
-        
+                
         if self.predicted_image is None:
             self.compute_predicted_image()
         
-        self.error_image = self.original_image - self.predicted_image  # Error = Original - Predicted (can be negative)
+        self.error_image = self.original_image - self.predicted_image  # Error = Original - Predicted
         
         return self.error_image
     
     
     def compute_histogram(self, image: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         
-        """Compute intensity histogram for an image.
-        Args: image: Input image (can be original or error image)
-        Returns: Tuple of (bin_edges, counts):
-                - bin_edges: Array of bin boundaries
-                - counts: Count of pixels in each bin
-        """
         # Flatten image for histogram computation
         flat = image.flatten()
         
-        # Determine appropriate bin range
-        # For error images, center bins around zero
-        # For original images, use full 0-255 range
-
         min_val, max_val = flat.min(), flat.max()
         
         if min_val < 0:
@@ -181,18 +126,13 @@ class LosslessPredictiveCoder:
         
         counts, bin_edges = np.histogram(flat, bins=bins)
         
-        # Return centers of bins instead of edges
+        # Return centers of bins
         bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
         
         return bin_centers.astype(int), counts
     
     def compute_entropy(self, image: np.ndarray) -> float:
-        
-        """
-        Calculate Shannon entropy: H = -Σ P(i)·log₂(P(i)).
-        Args: image: Input image array
-        Returns: float: Entropy in bits per pixel
-        """
+       
         # Flatten and count occurrences of each intensity value
         flat = image.flatten()
         total_pixels = len(flat)
@@ -206,18 +146,12 @@ class LosslessPredictiveCoder:
         # Remove zero probabilities to avoid log(0)
         probabilities = probabilities[probabilities > 0]
         
-        # Shannon entropy: H = -Σ P(i) * log₂(P(i))
         entropy = -np.sum(probabilities * np.log2(probabilities))
         
         return entropy
     
     def verify_lossless_reconstruction(self) -> Tuple[bool, float]:
-        """
-        Verify that original = predicted + error for all pixels.
-        Returns: Tuple of (is_lossless, max_error):
-                - is_lossless: True if reconstruction is perfect
-                - max_error: Maximum absolute reconstruction error
-        """
+        
         if self.predicted_image is None or self.error_image is None:
             self.compute_predicted_image()
             self.compute_error_image()
@@ -235,10 +169,7 @@ class LosslessPredictiveCoder:
         return is_lossless, float(max_error)
     
     def theoretical_compression_ratio(self) -> float:
-        
-        """Calculate theoretical compression ratio based on Shannon's theorem.
-        Returns: float: Theoretical compression ratio (H_original / H_error)
-        """
+       
         if self.error_image is None:
             self.compute_error_image()
         
@@ -248,13 +179,10 @@ class LosslessPredictiveCoder:
         if H_error > 0:
             return H_original / H_error
         else:
-            return float('inf')  # Perfect prediction (rare)
+            return float('inf')  # Perfect prediction 
     
     def compute_statistics(self) -> Dict:
-        
-        """Compute comprehensive statistics for the error image.
-        Returns: dict: Contains MAE, RMSE, error range, quartiles, etc.
-        """
+       
         if self.error_image is None:
             self.compute_error_image()
         
@@ -278,13 +206,6 @@ class LosslessPredictiveCoder:
     
     def visualize_results(self, save_path: Optional[str] = None, dpi: int = 300) -> plt.Figure:
         
-        """Create comprehensive 2x3 visualization of results.
-        Layout: Row 1: [Original Image] [Predicted Image] [Error Image (offset)]
-                Row 2: [Original Histogram] [Error Histogram] [Entropy Comparison]
-        Args: save_path: Optional path to save the figure
-            dpi: Resolution for saved figure (default 300)
-        Returns: matplotlib.figure.Figure: The generated figure
-        """
         if self.predicted_image is None or self.error_image is None:
             self.compute_predicted_image()
             self.compute_error_image()
@@ -365,10 +286,7 @@ class LosslessPredictiveCoder:
         return fig
     
     def generate_report(self) -> str:
-        """
-        Returns:
-            str: Formatted report with all metrics and analysis
-        """
+        
         if self.predicted_image is None or self.error_image is None:
             self.compute_predicted_image()
             self.compute_error_image()
@@ -462,9 +380,6 @@ Max reconstruction error: {max_recon_error}
 
 def create_test_image() -> np.ndarray:
     
-    """Create a simple 4x4 test image with smooth gradient for validation.
-    Returns: np.ndarray: 4x4 test image array
-    """
     test_image = np.array([
         [100, 105, 110, 108],
         [102, 107, 112, 110],
@@ -476,10 +391,6 @@ def create_test_image() -> np.ndarray:
 
 def create_sample_image(size: Tuple[int, int] = (256, 256)) -> np.ndarray:
     
-    """Create a sample grayscale image with gradients and patterns for testing.
-    Args: size: Tuple of (height, width)
-    Returns: np.ndarray: Synthetic grayscale image
-    """
     H, W = size
     image = np.zeros((H, W), dtype=np.uint8)
     
@@ -500,9 +411,7 @@ def create_sample_image(size: Tuple[int, int] = (256, 256)) -> np.ndarray:
 
 
 def main():
-    """ Main execution function with command-line argument parsing.
-        python predictive_coding_q3.py --image path/to/image.png
-    """
+    
     parser = argparse.ArgumentParser(
         description='Lossless Predictive Coding for Image Compression',
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -1,26 +1,9 @@
-"""
-1D Run-Length Coding for Bit-Plane Images
-Performs run-length encoding on bit plane images using 6-bit run values.
-Assumes all rows start with 1 (if row starts with 0, first run length is 0).
-"""
-
 import os
 import numpy as np
 from PIL import Image
 
 def run_length_encode_row(row):
-    """
-    Performs 1D run-length encoding on a binary row.
-    Assumes row starts with 1. If it starts with 0, first run length is 0.
-    Each run is represented with a 6-bit value (max run length = 63).
     
-    Args:
-        row: numpy array of binary values (0 or 255, or 0 or 1)
-    
-    Returns:
-        List of run lengths (each 0-63)
-    """
-    # Convert to binary (0 or 1)
     binary_row = (row > 0).astype(np.uint8)
     
     runs = []
@@ -32,14 +15,14 @@ def run_length_encode_row(row):
     if binary_row[0] == 0:
         runs.append(0)  # Zero run of 1s to start
     
-    # Now encode runs
+    
     current_val = binary_row[0]
     current_run = 0
     
     for pixel in binary_row:
         if pixel == current_val:
             current_run += 1
-            # If run exceeds 63 (6-bit max), split it
+            # If run exceeds 63 (max), split it
             if current_run > 63:
                 runs.append(63)
                 runs.append(0)  # Zero run of opposite value
@@ -49,7 +32,7 @@ def run_length_encode_row(row):
             current_val = pixel
             current_run = 1
     
-    # Append last run
+
     if current_run > 0:
         runs.append(min(current_run, 63))
     
@@ -57,15 +40,7 @@ def run_length_encode_row(row):
 
 
 def run_length_encode_image(image_array):
-    """
-    Performs 1D run-length encoding on entire image (row by row).
     
-    Args:
-        image_array: 2D numpy array of binary image
-    
-    Returns:
-        List of all run lengths for the image
-    """
     all_runs = []
     for row in image_array:
         row_runs = run_length_encode_row(row)
@@ -74,12 +49,7 @@ def run_length_encode_image(image_array):
 
 
 def save_compressed(runs, filepath):
-    """
-    Saves run-length encoded data to binary file.
-    Each run is stored as 6 bits, packed into bytes.
-    """
-    # Pack 6-bit values into bytes
-    # 4 runs (24 bits) = 3 bytes
+    
     packed_bytes = bytearray()
     
     bit_buffer = 0
@@ -94,7 +64,7 @@ def save_compressed(runs, filepath):
             byte_val = (bit_buffer >> bits_in_buffer) & 0xFF
             packed_bytes.append(byte_val)
     
-    # Flush remaining bits (pad with zeros)
+    
     if bits_in_buffer > 0:
         byte_val = (bit_buffer << (8 - bits_in_buffer)) & 0xFF
         packed_bytes.append(byte_val)
@@ -106,19 +76,12 @@ def save_compressed(runs, filepath):
 
 
 def process_folder(input_folder, output_folder, results_file):
-    """
-    Process all bit plane images in a folder.
     
-    Args:
-        input_folder: Path to folder containing bit plane images
-        output_folder: Path to save compressed files
-        results_file: Path to save compression ratios
-    """
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
         print(f"Created directory: {output_folder}")
     
-    # Find all bit plane images
+    
     image_files = sorted([f for f in os.listdir(input_folder) if f.endswith('.png') and 'bit_plane' in f])
     
     results = []
@@ -126,21 +89,18 @@ def process_folder(input_folder, output_folder, results_file):
     for img_file in image_files:
         img_path = os.path.join(input_folder, img_file)
         
-        # Load image
+        
         img = Image.open(img_path).convert('L')
         pixels = np.array(img)
         height, width = pixels.shape
         
-        # Calculate uncompressed size (1 bit per pixel)
+        
         uncompressed_bits = height * width
         
-        # Perform run-length encoding
-        runs = run_length_encode_image(pixels)
+        runs = run_length_encode_image(pixels)  
         
-        # Calculate compressed size (6 bits per run)
         compressed_bits = len(runs) * 6
         
-        # Save compressed file
         output_name = img_file.replace('.png', '.rl')
         output_path = os.path.join(output_folder, output_name)
         save_compressed(runs, output_path)
@@ -158,7 +118,7 @@ def process_folder(input_folder, output_folder, results_file):
         
         print(f"  {img_file}: ratio = {compression_ratio:.4f} ({len(runs)} runs)")
     
-    # Save results to text file
+    # Save results 
     with open(results_file, 'w') as f:
         f.write("=" * 70 + "\n")
         f.write("          RUN-LENGTH ENCODING COMPRESSION RESULTS\n")
@@ -173,7 +133,6 @@ def process_folder(input_folder, output_folder, results_file):
         
         f.write("-" * 70 + "\n")
         
-        # Calculate average
         avg_ratio = sum(r['compression_ratio'] for r in results) / len(results)
         f.write(f"\n{'Average Compression Ratio:':<45} {avg_ratio:.4f}\n")
         f.write("\nNote: Ratio < 1 means compression achieved, Ratio > 1 means expansion.\n")
@@ -185,7 +144,6 @@ def process_folder(input_folder, output_folder, results_file):
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Process binary bit plane images
     print("\n" + "=" * 60)
     print("Processing Binary Bit Plane Images")
     print("=" * 60)
@@ -199,7 +157,6 @@ def main():
     else:
         print(f"Error: {binary_input} not found!")
     
-    # Process gray coded bit plane images
     print("\n" + "=" * 60)
     print("Processing Gray Coded Bit Plane Images")
     print("=" * 60)

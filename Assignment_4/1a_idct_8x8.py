@@ -2,9 +2,7 @@ import numpy as np
 from scipy.fft import idct
 
 def idct_8x8(block):
-    """
-    Perform 2D DCT on an 8x8 block
-    """
+    
     block = np.asarray(block, dtype=float)
 
     if block.shape != (8, 8):
